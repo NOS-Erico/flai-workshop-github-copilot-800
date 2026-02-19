@@ -32,39 +32,60 @@ function Teams() {
       });
   }, []);
 
-  if (loading) return <div className="container mt-4"><p>Loading teams...</p></div>;
-  if (error) return <div className="container mt-4"><p className="text-danger">Error: {error}</p></div>;
+  if (loading) return (
+    <div className="container mt-5">
+      <div className="text-center spinner-container">
+        <div className="spinner-border text-primary" role="status" style={{ width: '3rem', height: '3rem' }}>
+          <span className="visually-hidden">Loading teams...</span>
+        </div>
+      </div>
+    </div>
+  );
+  
+  if (error) return (
+    <div className="container mt-5">
+      <div className="alert alert-danger" role="alert">
+        <h4 className="alert-heading">Error Loading Teams</h4>
+        <p>{error}</p>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="container mt-4">
-      <h2>Teams</h2>
-      <div className="table-responsive">
-        <table className="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th>Team Name</th>
-              <th>Description</th>
-              <th>Created Date</th>
-              <th>Members Count</th>
-            </tr>
-          </thead>
-          <tbody>
-            {teams.length > 0 ? (
-              teams.map((team, index) => (
-                <tr key={team.id || index}>
-                  <td>{team.name || 'N/A'}</td>
-                  <td>{team.description || 'N/A'}</td>
-                  <td>{team.created_at || team.created || 'N/A'}</td>
-                  <td>{team.members_count || team.members?.length || 0}</td>
-                </tr>
-              ))
-            ) : (
+    <div className="container mt-5">
+      <div className="component-container">
+        <h1 className="page-header">👥 Teams</h1>
+        <div className="mb-3">
+          <span className="badge bg-primary">{teams.length} Active Teams</span>
+        </div>
+        <div className="table-responsive">
+          <table className="table table-striped table-hover">
+            <thead>
               <tr>
-                <td colSpan="4" className="text-center">No teams found</td>
+                <th>Team Name</th>
+                <th>Description</th>
+                <th>Created Date</th>
+                <th>Members Count</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {teams.length > 0 ? (
+                teams.map((team, index) => (
+                  <tr key={team.id || index}>
+                    <td><strong>{team.name || 'N/A'}</strong></td>
+                    <td>{team.description || 'N/A'}</td>
+                    <td>{team.created_at ? new Date(team.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}</td>
+                    <td><span className="badge bg-info">{team.members_count || 0} members</span></td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="text-center">No teams found</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

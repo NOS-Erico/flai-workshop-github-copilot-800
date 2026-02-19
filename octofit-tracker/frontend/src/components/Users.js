@@ -5,6 +5,18 @@ function Users() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'Invalid Date';
+    
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
   useEffect(() => {
     const apiUrl = `https://${process.env.REACT_APP_CODESPACE_NAME}-8000.app.github.dev/api/users/`;
     console.log('Fetching users from:', apiUrl);
@@ -32,41 +44,62 @@ function Users() {
       });
   }, []);
 
-  if (loading) return <div className="container mt-4"><p>Loading users...</p></div>;
-  if (error) return <div className="container mt-4"><p className="text-danger">Error: {error}</p></div>;
+  if (loading) return (
+    <div className="container mt-5">
+      <div className="text-center spinner-container">
+        <div className="spinner-border text-primary" role="status" style={{ width: '3rem', height: '3rem' }}>
+          <span className="visually-hidden">Loading users...</span>
+        </div>
+      </div>
+    </div>
+  );
+  
+  if (error) return (
+    <div className="container mt-5">
+      <div className="alert alert-danger" role="alert">
+        <h4 className="alert-heading">Error Loading Users</h4>
+        <p>{error}</p>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="container mt-4">
-      <h2>Users</h2>
-      <div className="table-responsive">
-        <table className="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Email</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Date Joined</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.length > 0 ? (
-              users.map((user, index) => (
-                <tr key={user.id || index}>
-                  <td>{user.username || 'N/A'}</td>
-                  <td>{user.email || 'N/A'}</td>
-                  <td>{user.first_name || 'N/A'}</td>
-                  <td>{user.last_name || 'N/A'}</td>
-                  <td>{user.date_joined || 'N/A'}</td>
-                </tr>
-              ))
-            ) : (
+    <div className="container mt-5">
+      <div className="component-container">
+        <h1 className="page-header">👤 Users</h1>
+        <div className="mb-3">
+          <span className="badge bg-primary">{users.length} Registered Users</span>
+        </div>
+        <div className="table-responsive">
+          <table className="table table-striped table-hover">
+            <thead>
               <tr>
-                <td colSpan="5" className="text-center">No users found</td>
+                <th>Username</th>
+                <th>Email</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Date Joined</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {users.length > 0 ? (
+                users.map((user, index) => (
+                  <tr key={user.id || index}>
+                    <td><strong>{user.username || 'N/A'}</strong></td>
+                    <td>{user.email || 'N/A'}</td>
+                    <td>{user.first_name || 'N/A'}</td>
+                    <td>{user.last_name || 'N/A'}</td>
+                    <td>{formatDate(user.date_joined)}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center">No users found</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

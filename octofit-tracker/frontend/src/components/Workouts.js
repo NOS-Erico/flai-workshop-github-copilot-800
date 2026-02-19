@@ -32,41 +32,71 @@ function Workouts() {
       });
   }, []);
 
-  if (loading) return <div className="container mt-4"><p>Loading workouts...</p></div>;
-  if (error) return <div className="container mt-4"><p className="text-danger">Error: {error}</p></div>;
+  if (loading) return (
+    <div className="container mt-5">
+      <div className="text-center spinner-container">
+        <div className="spinner-border text-primary" role="status" style={{ width: '3rem', height: '3rem' }}>
+          <span className="visually-hidden">Loading workouts...</span>
+        </div>
+      </div>
+    </div>
+  );
+  
+  if (error) return (
+    <div className="container mt-5">
+      <div className="alert alert-danger" role="alert">
+        <h4 className="alert-heading">Error Loading Workouts</h4>
+        <p>{error}</p>
+      </div>
+    </div>
+  );
+
+  const getDifficultyBadge = (difficulty) => {
+    switch(difficulty?.toLowerCase()) {
+      case 'easy': return 'bg-success';
+      case 'medium': return 'bg-warning text-dark';
+      case 'hard': return 'bg-danger';
+      default: return 'bg-secondary';
+    }
+  };
 
   return (
-    <div className="container mt-4">
-      <h2>Workouts</h2>
-      <div className="table-responsive">
-        <table className="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th>Workout Name</th>
-              <th>Description</th>
-              <th>Activity Type</th>
-              <th>Duration (min)</th>
-              <th>Difficulty</th>
-            </tr>
-          </thead>
-          <tbody>
-            {workouts.length > 0 ? (
-              workouts.map((workout, index) => (
-                <tr key={workout.id || index}>
-                  <td>{workout.name || 'N/A'}</td>
-                  <td>{workout.description || 'N/A'}</td>
-                  <td>{workout.activity_type || 'N/A'}</td>
-                  <td>{workout.duration || 0}</td>
-                  <td>{workout.difficulty || 'N/A'}</td>
-                </tr>
-              ))
-            ) : (
+    <div className="container mt-5">
+      <div className="component-container">
+        <h1 className="page-header">💪 Workouts</h1>
+        <div className="mb-3">
+          <span className="badge bg-primary">{workouts.length} Available Workouts</span>
+        </div>
+        <div className="table-responsive">
+          <table className="table table-striped table-hover">
+            <thead>
               <tr>
-                <td colSpan="5" className="text-center">No workouts found</td>
+                <th>Workout Name</th>
+                <th>Description</th>
+                <th>Activity Type</th>
+                <th>Duration (min)</th>
+                <th>Difficulty</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {workouts.length > 0 ? (
+                workouts.map((workout, index) => (
+                  <tr key={workout.id || index}>
+                    <td><strong>{workout.name || 'N/A'}</strong></td>
+                    <td>{workout.description || 'N/A'}</td>
+                    <td><span className="badge bg-info">{workout.activity_type || 'N/A'}</span></td>
+                    <td>{workout.duration || 0}</td>
+                    <td><span className={`badge ${getDifficultyBadge(workout.difficulty)}`}>{workout.difficulty || 'N/A'}</span></td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center">No workouts found</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
