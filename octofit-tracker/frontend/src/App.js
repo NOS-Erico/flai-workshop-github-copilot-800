@@ -11,17 +11,17 @@ import logo from './octofitapp-small.png';
 function App() {
   return (
     <div className="App">
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
+          <Link className="navbar-brand" to="/">
             <img src={logo} alt="OctoFit Logo" className="navbar-logo" />
             OctoFit Tracker
-          
-          <Link className="navbar-brand" to="/">OctoFit Tracker</Link>
+          </Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav">
+            <ul className="navbar-nav ms-auto">
               <li className="nav-item">
                 <Link className="nav-link" to="/users">Users</Link>
               </li>
@@ -42,17 +42,17 @@ function App() {
         </div>
       </nav>
 
-      <div style={{ minHeight: 'calc(100vh - 56px)' }}>
+      <div style={{ minHeight: 'calc(100vh - 56px)', background: '#F5F5F5', padding: '2rem 0' }}>
         <Routes>
           <Route path="/" element={
             <div className="container mt-5">
               <div className="jumbotron">
-                <h1 className="display-4">🏋️ Welcome to OctoFit Tracker!</h1>
+                <h1 className="display-4">🏋️ Welcome to OctoFit Tracker</h1>
                 <p className="lead">Track your fitness journey, compete with teams, and achieve your goals.</p>
                 <hr className="my-4" />
-                <p>Navigate through the menu to explore activities, teams, leaderboard, and more.</p>
+                <p>Navigate through the menu to explore activities, teams, leaderboard, and personalized workouts.</p>
                 <div className="mt-4">
-                  <Link to="/activities" className="btn btn-primary btn-lg me-2">View Activities</Link>
+                  <Link to="/activities" className="btn btn-primary btn-lg me-3">View Activities</Link>
                   <Link to="/leaderboard" className="btn btn-outline-primary btn-lg">Leaderboard</Link>
                 </div>
               </div>

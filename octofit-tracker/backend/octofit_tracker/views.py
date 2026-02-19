@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from bson import ObjectId
 from .models import User, Team, Activity, Leaderboard, Workout
 from .serializers import (
     UserSerializer, 
@@ -32,6 +33,17 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    
+    def get_object(self):
+        """
+        Override get_object to handle MongoDB ObjectId lookup
+        """
+        queryset = self.filter_queryset(self.get_queryset())
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        filter_kwargs = {self.lookup_field: ObjectId(self.kwargs[lookup_url_kwarg])}
+        obj = queryset.get(**filter_kwargs)
+        self.check_object_permissions(self.request, obj)
+        return obj
     
     @action(detail=True, methods=['get'])
     def activities(self, request, pk=None):

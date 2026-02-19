@@ -9,10 +9,12 @@ class UserSerializer(serializers.ModelSerializer):
     first_name = serializers.SerializerMethodField()
     last_name = serializers.SerializerMethodField()
     date_joined = serializers.SerializerMethodField()
+    team_name = serializers.SerializerMethodField()
     
     class Meta:
         model = User
-        fields = ['id', 'email', 'name', 'username', 'first_name', 'last_name', 'team_id', 'created_at', 'date_joined']
+        fields = ['id', 'email', 'name', 'username', 'first_name', 'last_name', 'team_id', 'team_name', 'created_at', 'date_joined']
+        read_only_fields = ['created_at']
     
     def get_id(self, obj):
         return str(obj._id) if obj._id else None
@@ -37,6 +39,15 @@ class UserSerializer(serializers.ModelSerializer):
     
     def get_date_joined(self, obj):
         return obj.created_at
+    
+    def get_team_name(self, obj):
+        if obj.team_id:
+            try:
+                team = Team.objects.get(_id=ObjectId(obj.team_id))
+                return team.name
+            except (Team.DoesNotExist, Exception):
+                return None
+        return None
 
 
 class TeamSerializer(serializers.ModelSerializer):
